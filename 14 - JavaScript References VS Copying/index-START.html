@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JS Reference VS Copy</title>
+</head>
+
+<body>
+
+    <script>
+        // start with strings, numbers and booleans
+
+        // Let's say we have an array
+        const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+
+        // and we want to make a copy of it.
+        // You might think we can just do something like this:
+        // however what happens when we update that array?
+        // now here is the problem!
+        // oh no - we have edited the original array too!
+        // Why? It's because that is an array reference, not an array copy. They both point to the same array!
+        // So, how do we fix this? We take a copy instead!
+        // one way
+        const copyPlayers = players.slice();
+        copyPlayers[2] = 'test';
+        copyPlayers[3] = 'test';
+
+        console.log(players, copyPlayers);
+        // or create a new array and concat the old one in
+        const copyPlayers__2 = [].concat(players);
+        copyPlayers__2[2] = 'test2';
+        copyPlayers__2[3] = 'test2';
+        console.log(players, copyPlayers__2);
+        // or use the new ES6 Spread
+        const copyPlayers__3 = [...players];
+        copyPlayers__3[2] = 'test3';
+        copyPlayers__3[3] = 'test3';
+        console.log(players, copyPlayers__3);
+        // now when we update it, the original one isn't changed
+
+        // The same thing goes for objects, let's say we have a person object
+
+        // with Objects
+        const person = {
+            name: 'Wes Bos',
+            age: 80,
+            living: {
+                teenage: 'original',
+                retirement: {
+                    normalDay: 'normalDay',
+                    holiday: 'holiday'
+                }
+            }
+        };
+
+        // and think we make a copy:
+
+        // shallow copy
+        // primitive: copy by value
+        // **object: copy by reference**
+        const copyPerson__shallow = Object.assign({}, person);
+
+        // deep copy
+        // primitive: copy by value
+        // **object: copy by value**
+        const copyPerson__deep = JSON.parse(JSON.stringify(person));
+
+        copyPerson__deep.age = 90;
+        copyPerson__deep.living.teenage = 'deepClone';
+        copyPerson__deep.living.retirement.normalDay = 'deepClone';
+
+        copyPerson__shallow.age = 70;
+        copyPerson__shallow.name = 'shallowClone';
+        copyPerson__shallow.living.teenage = 'shallowClone';
+        copyPerson__shallow.living.retirement.normalDay = 'shallowClone';
+        console.log(person, copyPerson__shallow);
+        console.log(person, copyPerson__deep);
+
+        // how do we take a copy instead?
+        // We will hopefully soon see the object ...spread
+        // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    </script>
+
+</body>
+
+</html>
