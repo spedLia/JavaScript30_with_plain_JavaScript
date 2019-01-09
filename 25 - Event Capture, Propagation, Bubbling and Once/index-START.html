@@ -55,7 +55,10 @@
             console.log(this.classList.value);
             console.log(this);
         }
-        box.forEach(div => div.addEventListener('click', logText));
+        box.forEach(div => div.addEventListener('click', logText, {
+            capture: true,
+            once: true
+        }));
         btn.addEventListener('click', logText);
     </script>
 </body>
