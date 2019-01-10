@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <form class="search-form">
+        <input type="text" class="search" placeholder="City or State">
+        <ul class="suggestions">
+            <li>Filter for a city</li>
+            <li>or a state</li>
+        </ul>
+    </form>
+    <script>
+        const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+        const searchInput = document.querySelector('.search');
+        const suggestions = document.querySelector('.suggestions');
+        const cities = [];
+
+        fetch(endpoint)
+            .then(blob => blob.json())
+            .then(data => cities.push(...data));
+
+        function numberFormat(arabicNumerals) {
+            return arabicNumerals.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function handleMatches() {
+            suggestions.innerHTML = '';
+
+            const regex = new RegExp(this.value, 'gi');
+
+            const filterCities = cities.filter(place => {
+                return place.city.match(regex) || place.state.match(regex);
+            });
+
+            for (let {
+                    city,
+                    state,
+                    population
+                }
+                of filterCities) {
+                city = city.replace(regex, `<span class="hl">${this.value}</span>`);
+                state = state.replace(regex, `<span class="hl">${this.value}</span>`);
+                const template = `<li>
+                <span class="name">${city}, ${state}</span>
+                <span class="population">${numberFormat(population)}</span>
+                </li>`;
+                suggestions.insertAdjacentHTML('beforeend', template);
+            }
+        }
+
+        searchInput.addEventListener('keyup', handleMatches);
+        searchInput.addEventListener('change', handleMatches);
+    </script>
+</body>
+
+</html>
