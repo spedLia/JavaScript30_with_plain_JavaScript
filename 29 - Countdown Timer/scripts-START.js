@@ -33,8 +33,16 @@ function countdown(seconds) {
     }, 1000);
 }
 
-function timerClockStart() {
+function timerClockStart(e) {
+    e.preventDefault();
     const seconds = parseInt(this.dataset.time);
     return countdown(seconds);
 }
-buttons.forEach(button => button.addEventListener('click', timerClockStart))
+buttons.forEach(button => button.addEventListener('click', timerClockStart));
+document.customForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    console.log(this);
+    const seconds = this.querySelector('input').value * 60;
+    this.reset();
+    return countdown(seconds);
+});
